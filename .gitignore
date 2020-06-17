@@ -1,4 +1,4 @@
 app
-keys/*
-!keys/.gitkeep
+encryption/*
+!encryption/.gitkeep
 .env
