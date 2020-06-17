@@ -44,6 +44,12 @@ services:
     entrypoint: /config/nginx-entrypoint.sh
     command: nginx -g 'daemon off;'
 
+  mailhog:
+    image: mailhog/mailhog:${MAILHOG_TAG}
+    container_name: ${PROJECT_NAME}_mailhog
+    ports:
+      - "${PORT_PREFIX}25:8025"
+
 
   redis:
     image: redis
