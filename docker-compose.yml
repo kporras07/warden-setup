@@ -1,0 +1,49 @@
+version: '3.4'
+
+services:
+  php:
+    build: ./php
+    container_name: ${PROJECT_NAME}_php
+    environment:
+      - PHP_POST_MAX_SIZE=${PHP_POST_MAX_SIZE}
+      - PHP_UPLOAD_MAX_FILESIZE=${PHP_UPLOAD_MAX_FILESIZE}
+    expose:
+      - "9000"
+    volumes:
+      - "${PROJECT_ROOT}:/var/www/html:delegated"
+      - "${PROJECT_ROOT}/keys:/var/www/keys:delegated"
+
+
+  nginx:
+    image: nginx:${NGINX_TAG}
+    container_name: ${PROJECT_NAME}_nginx
+    environment:
+      - NGINX_DOCROOT="/var/www/html/${PROJECT_DOCROOT}"
+    ports:
+      - "${PORT_PREFIX}80:80"
+    depends_on:
+      - php
+    volumes:
+      - "${PROJECT_ROOT}:/var/www/html:delegated"
+      - "./nginx:/config"
+    entrypoint: /config/nginx-entrypoint.sh
+    command: nginx -g 'daemon off;'
+
+  mongo:
+    image: mongo:${MONGO_TAG}
+    container_name: ${PROJECT_NAME}_nginx
+    environment:
+      - NGINX_DOCROOT="/var/www/html/${PROJECT_DOCROOT}"
+    ports:
+      - "${PORT_PREFIX}80:80"
+    depends_on:
+      - php
+    volumes:
+      - "${PROJECT_ROOT}:/var/www/html:delegated"
+      - "./nginx:/config"
+    entrypoint: /config/nginx-entrypoint.sh
+    command: nginx -g 'daemon off;'
+
+
+  redis:
+    image: redis
